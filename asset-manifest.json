@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/midwesthomecompanion/static/css/main.d72dd5e1.css",
+    "main.js": "/midwesthomecompanion/static/js/main.faa70278.js",
+    "index.html": "/midwesthomecompanion/index.html",
+    "main.d72dd5e1.css.map": "/midwesthomecompanion/static/css/main.d72dd5e1.css.map",
+    "main.faa70278.js.map": "/midwesthomecompanion/static/js/main.faa70278.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d72dd5e1.css",
+    "static/js/main.faa70278.js"
+  ]
+}
