@@ -60,4 +60,89 @@
     lastScroll = currentScroll;
   }, { passive: true });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const carousels = document.querySelectorAll("[data-carousel]");
+  if (!carousels.length) return;
+
+  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  carousels.forEach((carousel) => {
+    const track = carousel.querySelector("[data-carousel-track]");
+    const slides = Array.from(track.querySelectorAll(".carousel-slide"));
+    const prevBtn = carousel.querySelector("[data-carousel-prev]");
+    const nextBtn = carousel.querySelector("[data-carousel-next]");
+    const dotsWrap = carousel.querySelector("[data-carousel-dots]");
+
+    if (!track || slides.length === 0) return;
+
+    // Build dots
+    const dots = slides.map((_, i) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "carousel-dot" + (i === 0 ? " active" : "");
+      b.setAttribute("aria-label", `Go to photo ${i + 1}`);
+      b.addEventListener("click", () => scrollToIndex(i));
+      dotsWrap?.appendChild(b);
+      return b;
+    });
+
+    const clamp = (n) => (n + slides.length) % slides.length;
+
+    const getIndex = () => {
+      const left = track.scrollLeft;
+      let best = 0;
+      let dist = Infinity;
+      slides.forEach((s, i) => {
+        const d = Math.abs(s.offsetLeft - left);
+        if (d < dist) { dist = d; best = i; }
+      });
+      return best;
+    };
+
+    const setActiveDot = (i) => {
+      dots.forEach(d => d.classList.remove("active"));
+      if (dots[i]) dots[i].classList.add("active");
+    };
+
+    const scrollToIndex = (i) => {
+      const idx = clamp(i);
+      track.scrollTo({ left: slides[idx].offsetLeft, behavior: prefersReduced ? "auto" : "smooth" });
+      setActiveDot(idx);
+    };
+
+    prevBtn?.addEventListener("click", () => scrollToIndex(getIndex() - 1));
+    nextBtn?.addEventListener("click", () => scrollToIndex(getIndex() + 1));
+
+    // Keep dots in sync on manual swipe/scroll
+    track.addEventListener("scroll", () => {
+      window.requestAnimationFrame(() => setActiveDot(getIndex()));
+    }, { passive: true });
+
+    // Autoplay (pause on hover/focus)
+    let timer = null;
+    const start = () => {
+      if (prefersReduced || timer) return;
+      timer = window.setInterval(() => scrollToIndex(getIndex() + 1), 3000);
+    };
+    const stop = () => {
+      if (!timer) return;
+      clearInterval(timer);
+      timer = null;
+    };
+
+    carousel.addEventListener("mouseenter", stop);
+    carousel.addEventListener("mouseleave", start);
+    carousel.addEventListener("focusin", stop);
+    carousel.addEventListener("focusout", start);
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) stop();
+      else start();
+    });
+
+    start();
+  });
+});
+
+  
 })();

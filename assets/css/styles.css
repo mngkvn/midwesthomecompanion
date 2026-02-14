@@ -3,6 +3,50 @@
    Pure CSS - No JavaScript Required
    ========================================== */
 
+/* ==========================================
+   Self-Hosted Fonts
+   ========================================== */
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/inter-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/inter-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../fonts/inter-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('../fonts/playfair-display-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('../fonts/playfair-display-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+   
 /* CSS Variables */
 :root {
   --color-primary: #007BA7;
@@ -50,7 +94,7 @@ html {
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1rem;
   line-height: 1.6;
   color: var(--color-slate-800);
@@ -60,7 +104,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-serif);
   font-weight: 700;
   line-height: 1.2;
   color: var(--color-slate-800);
@@ -931,4 +975,95 @@ a {
   .contact-section {
     padding: 1rem 0;
   }
+}
+
+/* ==========================================
+   Carousel (Scroll Snap + Controls)
+   ========================================== */
+
+.photo-carousel { margin-top: 2rem; }
+
+.carousel {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  background: var(--color-slate-100);
+}
+
+.carousel-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel-slide {
+  scroll-snap-align: start;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 380px;
+  object-fit: cover;
+  display: block;
+}
+
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-track { scrollbar-width: none; }
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 45px;
+  height: 45px;
+  border: 0;
+  border-radius: 9999px;
+  background: rgba(255,255,255,0.40);
+  color: var(--color-slate-700);
+  font-size: 32px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.carousel-btn:hover { background: rgba(255,255,255,0.95); }
+.carousel-btn:active { transform: translateY(-50%) scale(0.98); }
+
+.carousel-btn.prev { left: 12px; }
+.carousel-btn.next { right: 12px; }
+
+.carousel-dots {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 10px;
+}
+
+.carousel-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 9999px;
+  border: 0;
+  background: rgba(255,255,255,0.65);
+  cursor: pointer;
+}
+
+.carousel-dot.active {
+  background: rgba(255,255,255,0.95);
+}
+
+@media (max-width: 768px) {
+  .carousel-slide img { height: 300px; }
+  .carousel-btn { width: 40px; height: 40px; }
 }
